@@ -3,8 +3,10 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ProductImage } from './';
 
 @Entity()
 export class Product {
@@ -52,6 +54,11 @@ export class Product {
   tags: string[];
 
   // images
+  @OneToMany(() => ProductImage, (productImage) => productImage.product, {
+    cascade: true,
+    eager: true, //va a cargar las imageneas automaticamente
+  })
+  images?: ProductImage[]; //le pongo [] porque es un coleccion de imagenes
 
   //antes de insertarlo a la bd hace lo soguiente
   @BeforeInsert()

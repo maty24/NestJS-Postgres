@@ -36,11 +36,16 @@ export class CreateProductDto {
   @IsArray()
   sizes: string[];
 
-  @IsIn(['men', 'women', 'kid', 'unisex'])
+  @IsIn(['men', 'women', 'kid', 'unisex']) //si no vienen estos valores no me agrega nada
   gender: string;
 
   @IsString({ each: true })
   @IsArray()
   @IsOptional()
   tags: string[];
+
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  images?: string[];
 }
