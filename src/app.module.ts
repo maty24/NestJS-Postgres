@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { ProductsModule } from './products/products.module';
 import { CommonModule } from './common/common.module';
+import { AuthModule } from './auth/auth.module';
 import config from './config';
 
 @Module({
@@ -15,6 +16,7 @@ import config from './config';
     DatabaseModule,
     ProductsModule,
     CommonModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
