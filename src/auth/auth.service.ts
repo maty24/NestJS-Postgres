@@ -28,7 +28,10 @@ export class AuthService {
         password: bcrypt.hashSync(password, 10),
       });
       await this.userRepository.save(user);
-      return user;
+      return {
+        ...user,
+        token: this.getJwtToken({ id: user.id }),
+      };
     } catch (error) {
       this.handleDBErrors(error);
     }
@@ -38,7 +41,7 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true },
+      select: { email: true, password: true, id: true },
     });
     if (!user) throw new UnauthorizedException('no existe este email');
 
@@ -46,7 +49,7 @@ export class AuthService {
       throw new UnauthorizedException('no sirve la contraseña');
     return {
       ...user,
-      token: this.getJwtToken({ email: user.email }), //tiene que ser un objeto
+      token: this.getJwtToken({ id: user.id }), //tiene que ser un objeto
     };
   }
 

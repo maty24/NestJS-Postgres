@@ -3,10 +3,12 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductImage } from './';
+import { User } from '../../auth/entities/User.entity';
 
 @Entity()
 export class Product {
@@ -60,6 +62,8 @@ export class Product {
   })
   images?: ProductImage[]; //le pongo [] porque es un coleccion de imagenes
 
+  @ManyToOne(() => User, (user) => user.product, { eager: true })
+  user: User;
   //antes de insertarlo a la bd hace lo soguiente
   @BeforeInsert()
   checkSlugInsert() {

@@ -12,6 +12,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { validate as isUUID } from 'uuid';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { ProductImage, Product } from './entities';
+import { User } from '../auth/entities/User.entity';
 
 @Injectable()
 export class ProductsService {
@@ -26,7 +27,7 @@ export class ProductsService {
     private readonly dataSource: DataSource, //sabe la configuracion de nuestros repositorios
   ) {}
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, user: User) {
     try {
       const { images = [], ...productDetails } = createProductDto; //pongo el nombre que quiero en operador ...rest
       //tenemos todos los atributos y crea la instancia de los productos
@@ -35,6 +36,7 @@ export class ProductsService {
         images: images.map(
           (image) => this.productImageRepository.create({ url: image }), //el id producto sera el mismo id y el url va ser igual al image
         ),
+        user, //estoy tambien mandando el usuario que lo creo
       });
       await this.productRepository.save(product); //para que me guarde el porducto en la bd
       return product;
@@ -141,5 +143,15 @@ export class ProductsService {
     throw new InternalServerErrorException(
       'Unexpected error, check server logs',
     );
+  }
+
+  async deleteAllProducts() {
+    const query = this.productRepository.createQueryBuilder('product');
+
+    try {
+      return await query.delete().where({}).execute();
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 }

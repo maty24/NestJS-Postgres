@@ -3,9 +3,10 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-
+import { Product } from '../../products/entities/product.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -34,6 +35,12 @@ export class User {
     default: ['user'],
   })
   roles: string[];
+
+  @OneToMany(
+    () => Product, //tabla a la que apunto
+    (product) => product.user, //como se relaciona con la otra tabla, se relaciona con user
+  )
+  product: Product;
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

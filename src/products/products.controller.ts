@@ -12,15 +12,21 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { GetUser } from '../auth/decoratator';
+import { User } from '../auth/entities/User.entity';
+import { Auth } from '../auth/decoratator/auth.decorator';
+import { ValidRoles } from 'src/auth/interfaces/valid-roles';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  @Auth(ValidRoles.user) //le digo que rol puede usarlo
+  create(@Body() createProductDto: CreateProductDto, @GetUser() user: User) {
+    //si o si me tene que mandar el token
+    return this.productsService.create(createProductDto, user);
   }
 
   @Get()
